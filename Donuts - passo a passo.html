@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Duncan's Just-In-Time Donuts</title>
+
+    <link rel="stylesheet" type="text/css" href="donuts.css" />
+
+    <script type="text/javascript">
+
+      //Multiplica por 12 caso o usuário peça em dúzias. indexOf é para selecionar uma parte dos caracteres
+      function parseDonuts(donutString){
+        numDonuts = parseInt(donutString);
+        if (donutString.indexOf("dozen") != -1)
+        numDonuts *= 12;
+        return numDonuts
+      }
+
+      function updateOrder() {
+        const TAXRATE = 0.0925;
+        const DONUTPRICE = 0.50;
+        //parseInt serve para transformar as strings numCakeDonuts e numGlazedDonuts em números inteiros
+        //para que a soma ocorra, se tirar o parseInt é feita uma concatenação
+        var numCakeDonuts = parseDonuts(document.getElementById("cakedonuts").value);
+        var numGlazedDonuts = parseDonuts(document.getElementById("glazeddonuts").value);
+        if(isNaN (numCakeDonuts))
+          numCakeDonuts = 0;
+        if (isNaN (numGlazedDonuts))
+          numGlazedDonuts = 0;
+       //Declarei as variáveis em cima, uso elas para fazer a checagem dos valores
+        var subTotal = (numCakeDonuts + numGlazedDonuts) * DONUTPRICE;
+        var tax = subTotal * TAXRATE;
+        var total = subTotal + tax;
+        document.getElementById("subtotal").value = "$" + subTotal.toFixed(2);
+        document.getElementById("tax").value = "$" + tax.toFixed(2);
+        document.getElementById("total").value = "$" + total.toFixed(2);
+      }
+
+      //ATENÇAO AO ABRIR E FECHAR CHAVES E PARENTESES!!!!
+      function placeOrder(form) {
+        // Submit the order to the server
+        if (document.getElementById("name").value == "")
+          alert("Please write your name on the Name field");
+        else if (document.getElementById("pickupminutes").value == "" || isNaN (document.getElementById("pickupminutes").value))
+          alert("Please tell us when you will arrive here");
+          // checa se o campo está vazio ou se é um valor não numérico
+        else
+          form.submit();
+        }
+    </script>
+  </head>
+
+  <body>
+    <div id="frame">
+      <div class="heading">Duncan's Just-In-Time Donuts</div>
+      <div class="subheading">All donuts 50 cents each, cake or glazed!</div>
+      <div id="left">
+        <img src="donuttime.png" alt="Just-In-Time Donuts" />
+      </div>
+      <form name="orderform" action="donuts.php" method="POST">
+        <div class="field">
+          Name: <input type="text" id="name" name="name" value="" />
+        </div>
+        <div class="field">
+        # of cake donuts: <input type="text" id="cakedonuts" name="cakedonuts" value=""
+          onchange="updateOrder();" />
+        </div>
+        <div class="field">
+        # of glazed donuts: <input type="text" id="glazeddonuts" name="glazeddonuts" value=""
+          onchange="updateOrder();" />
+        </div>
+        <div class="field">
+        Minutes 'til pickup: <input type="text" id="pickupminutes" name="pickupminutes" value="" />
+        </div>
+        <div class="field">
+        Subtotal: <input type="text" id="subtotal" name="subtotal" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        Tax: <input type="text" id="tax" name="tax" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        Total: <input type="text" id="total" name="total" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        <input type="button" value="Place Order" onclick="placeOrder(this.form);" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
